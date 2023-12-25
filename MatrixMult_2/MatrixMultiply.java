@@ -31,16 +31,16 @@ public class MatrixMultiply {
       int rowGroupSize = ((m-1)/K+1);
       int colGroupSize = ((p-1)/L+1);
       if(allVals[0].equals("0")) {
-        int rowGroup = allVals[1] / rowGroupSize;
-        int rowGroupIdx = allVals[1] - rowGroup * rowGroupSize;
+        int rowGroup = Integer.parseInt(allVals[1]) / rowGroupSize;
+        int rowGroupIdx = Integer.parseInt(allVals[1]) - rowGroup * rowGroupSize;
         outputVal.set("0"+rowGroupIdx+allVals[2]+","+allVals[3]);
 	      for (int l = 0; l < L; l++) {
 	        outputKey.set(rowGroup+","+l);
 	        context.write(outputKey, outputVal);
 	      }
         } else if(allVals[0].equals("1")) {
-          int colGroup = allVals[2] / colGroupSize;
-          int colGroupIdx = allVals[2] - colGroup * colGroupSize;
+          int colGroup = Integer.parseInt(allVals[2]) / colGroupSize;
+          int colGroupIdx = Integer.parseInt(allVals[2]) - colGroup * colGroupSize;
 	        outputVal.set("1,"+colGroupIdx+allVals[1]+","+allVals[3]);          
 	        for (int k = 0; k < K; k++) {
 	          outputKey.set(k+","+colGroup);
@@ -58,6 +58,7 @@ public class MatrixMultiply {
                        ) throws IOException, InterruptedException {
       
       String[] vals;
+      String[] keys;
       Configuration conf = context.getConfiguration();
       int m = Integer.parseInt(conf.get("m"));
       int n = Integer.parseInt(conf.get("n"));
@@ -81,7 +82,7 @@ public class MatrixMultiply {
             partialVals[rowIdx][i][partialIdx] *= value;
           }
         } else if(matId == 1) {
-          int colIdx = Integer.parseInt(vlas[1]);
+          int colIdx = Integer.parseInt(vals[1]);
           for (int i = 0; i < rowGroupSize; i++) {
             partialVals[i][colIdx][partialIdx] *= value;
           }
@@ -92,7 +93,7 @@ public class MatrixMultiply {
           for (int i = 0; i < n; i++) {
 	          sums[k][l] += partialVals[k][l][i];
           }
-          context.write(null, new Text((keys[0]*rowGroupSize+k)+","+(keys[1]*colGroupSize+l)+","+Float.toString(sum)));
+          context.write(null, new Text((keys[0]*rowGroupSize+k)+","+(keys[1]*colGroupSize+l)+","+Float.toString(sums[k][l])));
         }
       }
       
