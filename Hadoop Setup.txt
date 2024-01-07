@@ -11,13 +11,6 @@ tar xzf hadoop-3.3.6.tar.gz -C hadoop/ --strip-components=1
 chown -R sobhan hadoop/
 
 ssh-keygen -t rsa
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-chmod 0600 ~/.ssh/authorized_keys
 ssh-copy-id -i ~/.ssh/id_rsa.pub user@host
 
 sudo hostnamectl set-hostname linuxconfig
-
-192.168.80.129 hadoop-master
-192.168.80.130 hadoop-worker1
-192.168.80.131 hadoop-worker2
-192.168.80.132 hadoop-worker3
